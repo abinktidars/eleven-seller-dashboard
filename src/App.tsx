@@ -4,6 +4,9 @@ import { DashboardOverview } from "./components/dashboard-overview";
 import { ProductManagement } from "./components/product-management";
 import { OrderManagement } from "./components/order-management";
 import { AnalyticsDashboard } from "./components/analytics-dashboard";
+import { LoginPage } from "./components/login-page";
+import { RegisterPage } from "./components/register-page";
+import { ForgotPasswordPage } from "./components/forgot-password-page";
 import {
   Card,
   CardContent,
@@ -18,6 +21,7 @@ import {
   HelpCircle,
   Users,
   CreditCard,
+  LogOut,
 } from "lucide-react";
 
 // Placeholder components for unimplemented sections
@@ -356,6 +360,54 @@ function HelpPage() {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [authPage, setAuthPage] = useState<"login" | "register" | "forgot-password">("login");
+
+  const handleLogin = (email: string, password: string) => {
+    setIsAuthenticated(true);
+    setUserEmail(email);
+  };
+
+  const handleRegisterSuccess = (email: string) => {
+    // Auto login after successful registration
+    setIsAuthenticated(true);
+    setUserEmail(email);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserEmail("");
+    setActiveTab("dashboard");
+    setAuthPage("login");
+  };
+
+  // Show authentication pages if not authenticated
+  if (!isAuthenticated) {
+    switch (authPage) {
+      case "register":
+        return (
+          <RegisterPage
+            onBackToLogin={() => setAuthPage("login")}
+            onRegisterSuccess={handleRegisterSuccess}
+          />
+        );
+      case "forgot-password":
+        return (
+          <ForgotPasswordPage
+            onBackToLogin={() => setAuthPage("login")}
+          />
+        );
+      default:
+        return (
+          <LoginPage
+            onLogin={handleLogin}
+            onForgotPassword={() => setAuthPage("forgot-password")}
+            onRegister={() => setAuthPage("register")}
+          />
+        );
+    }
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -389,6 +441,27 @@ export default function App() {
         onTabChange={setActiveTab}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header with user info and logout */}
+        <header className="border-b bg-background px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-semibold">Seller Management System</h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm font-medium">{userEmail}</p>
+              <p className="text-xs text-muted-foreground">Seller Account</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Keluar
+            </Button>
+          </div>
+        </header>
         <main className="flex-1 overflow-y-auto">
           <div className="p-6">{renderContent()}</div>
         </main>
