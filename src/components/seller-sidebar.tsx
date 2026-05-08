@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  BarChart3,
   Settings,
   Store,
   Users,
@@ -15,48 +15,27 @@ import {
   LogOut,
   Menu,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Handshake
 } from 'lucide-react'
 import { cn } from "./ui/utils"
 
 interface SellerSidebarProps {
   activeTab: string
   onTabChange: (tab: string) => void
+  productBadge?: number
+  orderBadge?: number
+  resellerBadge?: number
 }
 
-const navigationItems = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    id: 'products',
-    label: 'Produk',
-    icon: Package,
-    badge: '12', // Low stock items
-  },
-  {
-    id: 'orders',
-    label: 'Pesanan',
-    icon: ShoppingCart,
-    badge: '5', // Pending orders
-  },
-  {
-    id: 'analytics',
-    label: 'Analitik',
-    icon: BarChart3,
-  },
-  {
-    id: 'customers',
-    label: 'Pelanggan',
-    icon: Users,
-  },
-  {
-    id: 'payments',
-    label: 'Keuangan',
-    icon: CreditCard,
-  },
+const baseNavigationItems = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'products',  label: 'Produk',    icon: Package },
+  { id: 'orders',    label: 'Pesanan',   icon: ShoppingCart },
+  { id: 'analytics', label: 'Analitik',  icon: BarChart3 },
+  { id: 'customers',  label: 'Pelanggan', icon: Users },
+  { id: 'resellers',  label: 'Reseller',  icon: Handshake },
+  { id: 'payments',   label: 'Keuangan',  icon: CreditCard },
 ]
 
 const bottomItems = [
@@ -78,8 +57,19 @@ const bottomItems = [
   },
 ]
 
-export function SellerSidebar({ activeTab, onTabChange }: SellerSidebarProps) {
+export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge, resellerBadge }: SellerSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const navigationItems = baseNavigationItems.map(item => ({
+    ...item,
+    badge: item.id === 'products' && productBadge != null && productBadge > 0
+      ? String(productBadge)
+      : item.id === 'orders' && orderBadge != null && orderBadge > 0
+        ? String(orderBadge)
+        : item.id === 'resellers' && resellerBadge != null && resellerBadge > 0
+          ? String(resellerBadge)
+          : undefined,
+  }))
 
   return (
     <>
@@ -144,9 +134,16 @@ export function SellerSidebar({ activeTab, onTabChange }: SellerSidebarProps) {
                     <Icon className="h-4 w-4" />
                     <span className="flex-1 text-left">{item.label}</span>
                     {item.badge && (
-                      <Badge 
-                        variant={item.id === 'products' ? 'destructive' : 'default'}
-                        className="text-xs h-5 px-1.5"
+                      <Badge
+                        variant={
+                          item.id === 'products' ? 'destructive' :
+                          item.id === 'resellers' ? 'outline' :
+                          'default'
+                        }
+                        className={cn(
+                          "text-xs h-5 px-1.5",
+                          item.id === 'resellers' && "border-amber-500 text-amber-600"
+                        )}
                       >
                         {item.badge}
                       </Badge>
