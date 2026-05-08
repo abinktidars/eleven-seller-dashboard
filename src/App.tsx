@@ -132,7 +132,7 @@ export default function App() {
         marketingBadge={marketingBadge}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="border-b bg-white px-4 md:px-6 py-3 flex items-center justify-between shadow-sm">
+        <header className="border-b border-gray-100 bg-white px-4 md:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -143,28 +143,25 @@ export default function App() {
               <Menu className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2.5">
-              <div className="hidden md:flex w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg items-center justify-center shadow-sm">
+              <div className="hidden md:flex w-8 h-8 bg-indigo-600 rounded-xl items-center justify-center shrink-0">
                 <Store className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-gray-900 leading-tight">Seller Management</h2>
+                <h2 className="text-sm font-bold text-gray-900 leading-tight">Seller Management</h2>
                 <p className="text-[11px] text-indigo-500 font-medium leading-tight hidden md:block">Eleven Platform</p>
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1.5">
-              <div className="w-6 h-6 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 border border-gray-200 rounded-full px-3 py-1.5">
+              <div className="w-5 h-5 bg-indigo-600 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                 {userEmail.charAt(0).toUpperCase()}
               </div>
-              <div className="text-right">
-                <p className="text-xs font-semibold text-gray-800 leading-tight">{userEmail.split('@')[0]}</p>
-                <p className="text-[10px] text-indigo-500 leading-tight">Seller Account</p>
-              </div>
+              <p className="text-xs font-medium text-gray-700">{userEmail.split('@')[0]}</p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300">
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="flex items-center gap-2 text-gray-500 hover:text-red-500 hover:bg-red-50">
               <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">Keluar</span>
+              <span className="hidden sm:inline text-xs">Keluar</span>
             </Button>
           </div>
         </header>
