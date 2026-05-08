@@ -161,11 +161,17 @@ export function LiveChat() {
     pushAgentReply(getAutoReply(t))
   }, [pushAgentReply])
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setOpen(true)
     setMinimized(false)
     setUnread(0)
-  }
+  }, [])
+
+  // Listen for external open trigger (e.g. Help page button)
+  useEffect(() => {
+    window.addEventListener('open-live-chat', handleOpen)
+    return () => window.removeEventListener('open-live-chat', handleOpen)
+  }, [handleOpen])
 
   const handleReset = () => {
     setMessages([{

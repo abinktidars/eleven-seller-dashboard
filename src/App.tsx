@@ -17,7 +17,7 @@ import { LiveChat } from "./components/live-chat";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
-import { Bell, HelpCircle, LogOut } from "lucide-react";
+import { Bell, HelpCircle, LogOut, Menu, Store } from "lucide-react";
 
 function NotificationsPage() {
   return (
@@ -132,16 +132,39 @@ export default function App() {
         marketingBadge={marketingBadge}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="border-b bg-background px-6 py-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Seller Management System</h2>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm font-medium">{userEmail}</p>
-              <p className="text-xs text-muted-foreground">Seller Account</p>
+        <header className="border-b bg-white px-4 md:px-6 py-3 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden -ml-1 shrink-0 text-indigo-600 hover:bg-indigo-50"
+              onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <div className="flex items-center gap-2.5">
+              <div className="hidden md:flex w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg items-center justify-center shadow-sm">
+                <Store className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-gray-900 leading-tight">Seller Management</h2>
+                <p className="text-[11px] text-indigo-500 font-medium leading-tight hidden md:block">Eleven Platform</p>
+              </div>
             </div>
-            <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center gap-2">
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1.5">
+              <div className="w-6 h-6 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+                {userEmail.charAt(0).toUpperCase()}
+              </div>
+              <div className="text-right">
+                <p className="text-xs font-semibold text-gray-800 leading-tight">{userEmail.split('@')[0]}</p>
+                <p className="text-[10px] text-indigo-500 leading-tight">Seller Account</p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300">
               <LogOut className="w-4 h-4" />
-              Keluar
+              <span className="hidden sm:inline">Keluar</span>
             </Button>
           </div>
         </header>

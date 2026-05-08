@@ -27,11 +27,11 @@ const salesData = [
 ]
 
 const categoryData = [
-  { nama: 'Electronics',   nilai: 35, color: '#8884d8' },
-  { nama: 'Fashion',       nilai: 25, color: '#82ca9d' },
-  { nama: 'Home & Garden', nilai: 20, color: '#ffc658' },
-  { nama: 'Sports',        nilai: 12, color: '#ff7300' },
-  { nama: 'Books',         nilai: 8,  color: '#06b6d4' },
+  { nama: 'Electronics',   nilai: 35, color: '#6366f1' },
+  { nama: 'Fashion',       nilai: 25, color: '#06b6d4' },
+  { nama: 'Home & Garden', nilai: 20, color: '#10b981' },
+  { nama: 'Sports',        nilai: 12, color: '#f59e0b' },
+  { nama: 'Books',         nilai: 8,  color: '#f43f5e' },
 ]
 
 const recentOrders = [

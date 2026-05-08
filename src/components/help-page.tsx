@@ -406,7 +406,10 @@ export function HelpPage() {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-1">
+            <Button
+              className="w-full mt-1"
+              onClick={() => window.dispatchEvent(new Event('open-live-chat'))}
+            >
               <MessageSquare className="w-4 h-4 mr-1.5" />Mulai Live Chat
             </Button>
           </CardContent>

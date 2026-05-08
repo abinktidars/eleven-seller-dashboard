@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Button } from "./ui/button"
+import { useState, useEffect } from 'react'
 import { Badge } from "./ui/badge"
 import {
   LayoutDashboard,
@@ -13,8 +12,6 @@ import {
   Bell,
   HelpCircle,
   LogOut,
-  Menu,
-  X,
   AlertTriangle,
   Handshake,
   Megaphone,
@@ -42,55 +39,61 @@ const baseNavigationItems = [
 ]
 
 const bottomItems = [
-  {
-    id: 'notifications',
-    label: 'Notifikasi',
-    icon: Bell,
-    badge: '3',
-  },
-  {
-    id: 'settings',
-    label: 'Pengaturan',
-    icon: Settings,
-  },
-  {
-    id: 'help',
-    label: 'Bantuan',
-    icon: HelpCircle,
-  },
+  { id: 'notifications', label: 'Notifikasi',  icon: Bell,        badge: '3' },
+  { id: 'settings',      label: 'Pengaturan',  icon: Settings },
+  { id: 'help',          label: 'Bantuan',     icon: HelpCircle },
 ]
 
 export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge, resellerBadge, marketingBadge }: SellerSidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(true)
+
+  useEffect(() => {
+    const handler = () => setIsCollapsed(v => !v)
+    window.addEventListener('toggle-sidebar', handler)
+    return () => window.removeEventListener('toggle-sidebar', handler)
+  }, [])
 
   const navigationItems = baseNavigationItems.map(item => ({
     ...item,
-    badge: item.id === 'products' && productBadge != null && productBadge > 0
-      ? String(productBadge)
-      : item.id === 'orders' && orderBadge != null && orderBadge > 0
-        ? String(orderBadge)
-        : item.id === 'resellers' && resellerBadge != null && resellerBadge > 0
-          ? String(resellerBadge)
-          : item.id === 'marketing' && marketingBadge != null && marketingBadge > 0
-            ? String(marketingBadge)
-            : undefined,
+    badge: item.id === 'products'  && productBadge  != null && productBadge  > 0 ? String(productBadge)  :
+           item.id === 'orders'    && orderBadge    != null && orderBadge    > 0 ? String(orderBadge)    :
+           item.id === 'resellers' && resellerBadge != null && resellerBadge > 0 ? String(resellerBadge) :
+           item.id === 'marketing' && marketingBadge!= null && marketingBadge> 0 ? String(marketingBadge):
+           undefined,
   }))
+
+  const navBtn = (id: string, label: string, Icon: React.ElementType, badge?: string, badgeColor?: string) => {
+    const isActive = activeTab === id
+    return (
+      <button
+        key={id}
+        onClick={() => { onTabChange(id); setIsCollapsed(true) }}
+        className={cn(
+          "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+          isActive
+            ? "bg-white/20 text-white shadow-sm"
+            : "text-indigo-200 hover:bg-white/10 hover:text-white"
+        )}
+      >
+        <Icon className="h-4 w-4 shrink-0" />
+        <span className="flex-1 text-left">{label}</span>
+        {badge && (
+          <span className={cn(
+            "text-[11px] h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center font-bold",
+            badgeColor ?? "bg-indigo-400 text-white"
+          )}>
+            {badge}
+          </span>
+        )}
+      </button>
+    )
+  }
 
   return (
     <>
-      {/* Mobile menu button */}
-      <Button 
-        variant="ghost" 
-        size="sm"
-        className="md:hidden fixed top-4 left-4 z-50"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        {isCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
-      </Button>
-
       {/* Overlay for mobile */}
       {!isCollapsed && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsCollapsed(true)}
         />
@@ -98,126 +101,69 @@ export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed md:relative left-0 top-0 z-50 h-screen w-64 bg-background border-r transition-transform duration-300 ease-in-out",
-        "md:translate-x-0",
+        "fixed md:relative left-0 top-0 z-50 h-screen w-64 flex flex-col",
+        "bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-950",
+        "transition-transform duration-300 ease-in-out md:translate-x-0",
         isCollapsed ? "-translate-x-full" : "translate-x-0"
       )}>
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Store className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h2>Seller Center</h2>
-                <p className="text-xs text-muted-foreground">Toko Ahmad</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Navigation */}
-          <div className="flex-1 overflow-y-auto">
-            <nav className="p-4 space-y-2">
-              {navigationItems.map((item) => {
-                const Icon = item.icon
-                const isActive = activeTab === item.id
-                
-                return (
-                  <Button
-                    key={item.id}
-                    variant={isActive ? "secondary" : "ghost"}
-                    className={cn(
-                      "w-full justify-start gap-3 h-10",
-                      isActive && "bg-secondary"
-                    )}
-                    onClick={() => {
-                      onTabChange(item.id)
-                      setIsCollapsed(true) // Close mobile menu
-                    }}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="flex-1 text-left">{item.label}</span>
-                    {item.badge && (
-                      <Badge
-                        variant={
-                          item.id === 'products' ? 'destructive' :
-                          item.id === 'resellers' ? 'outline' :
-                          'default'
-                        }
-                        className={cn(
-                          "text-xs h-5 px-1.5",
-                          item.id === 'resellers' && "border-amber-500 text-amber-600"
-                        )}
-                      >
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </Button>
-                )
-              })}
-            </nav>
+        {/* Header */}
+        <div className="flex items-center gap-3 p-5 border-b border-white/10">
+          <div className="w-9 h-9 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shrink-0">
+            <Store className="w-5 h-5 text-white" />
           </div>
-
-          {/* Quick Stats */}
-          <div className="p-4 border-t space-y-3">
-            <div className="bg-muted/50 rounded-lg p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Penjualan Hari Ini</span>
-                <span className="text-sm">Rp 2.5jt</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Pesanan Baru</span>
-                <span className="text-sm">5</span>
-              </div>
-              <div className="flex items-center justify-between text-orange-600">
-                <span className="text-sm flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
-                  Stok Rendah
-                </span>
-                <span className="text-sm">12</span>
-              </div>
-            </div>
+          <div>
+            <p className="text-white font-semibold text-sm leading-tight">Seller Center</p>
+            <p className="text-indigo-300 text-xs">Toko Ahmad</p>
           </div>
+        </div>
 
-          {/* Bottom Navigation */}
-          <div className="p-4 border-t space-y-2">
-            {bottomItems.map((item) => {
-              const Icon = item.icon
-              const isActive = activeTab === item.id
-              
-              return (
-                <Button
-                  key={item.id}
-                  variant={isActive ? "secondary" : "ghost"}
-                  className={cn(
-                    "w-full justify-start gap-3 h-10",
-                    isActive && "bg-secondary"
-                  )}
-                  onClick={() => {
-                    onTabChange(item.id)
-                    setIsCollapsed(true)
-                  }}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <Badge variant="default" className="text-xs h-5 px-1.5">
-                      {item.badge}
-                    </Badge>
-                  )}
-                </Button>
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto scrollbar-none">
+          <nav className="p-3 space-y-0.5">
+            <p className="text-indigo-400 text-[10px] font-semibold uppercase tracking-wider px-3 pt-1 pb-2">Menu Utama</p>
+            {navigationItems.map(item =>
+              navBtn(
+                item.id, item.label, item.icon, item.badge,
+                item.id === 'products'  ? "bg-red-500 text-white" :
+                item.id === 'resellers' ? "bg-amber-400 text-amber-900" :
+                item.id === 'marketing' ? "bg-emerald-400 text-emerald-900" :
+                "bg-indigo-400 text-white"
               )
-            })}
-            
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-3 h-10 text-destructive hover:text-destructive"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="flex-1 text-left">Keluar</span>
-            </Button>
+            )}
+          </nav>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="mx-3 mb-3 bg-white/8 rounded-xl p-3 border border-white/10 space-y-2">
+          <p className="text-indigo-400 text-[10px] font-semibold uppercase tracking-wider">Ringkasan Hari Ini</p>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-indigo-300">Penjualan</span>
+            <span className="text-xs font-semibold text-white">Rp 2.5jt</span>
           </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-indigo-300">Pesanan Baru</span>
+            <span className="text-xs font-semibold text-emerald-400">5</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-amber-300 flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3" />Stok Rendah
+            </span>
+            <span className="text-xs font-semibold text-amber-300">12</span>
+          </div>
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="p-3 border-t border-white/10 space-y-0.5">
+          {bottomItems.map(item =>
+            navBtn(item.id, item.label, item.icon, item.badge, "bg-red-500 text-white")
+          )}
+          <button
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-300 hover:bg-red-500/20 hover:text-red-200 transition-all duration-150"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            <span className="flex-1 text-left">Keluar</span>
+          </button>
         </div>
       </div>
     </>
