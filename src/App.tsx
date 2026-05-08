@@ -7,6 +7,7 @@ import { AnalyticsDashboard } from "./components/analytics-dashboard";
 import { LoginPage } from "./components/login-page";
 import { RegisterPage } from "./components/register-page";
 import { ForgotPasswordPage } from "./components/forgot-password-page";
+import { SettingsPage } from "./components/settings-page";
 import {
   Card,
   CardContent,
@@ -17,7 +18,6 @@ import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
 import {
   Bell,
-  Settings,
   HelpCircle,
   Users,
   CreditCard,
@@ -217,75 +217,6 @@ function NotificationsPage() {
   );
 }
 
-function SettingsPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1>Pengaturan Toko</h1>
-        <p className="text-muted-foreground">
-          Kelola pengaturan toko dan profil seller Anda
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              Informasi Toko
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm">Nama Toko</label>
-              <p className="text-sm text-muted-foreground">
-                Toko Ahmad Electronics
-              </p>
-            </div>
-            <div>
-              <label className="text-sm">Alamat</label>
-              <p className="text-sm text-muted-foreground">
-                Jl. Sudirman No. 123, Jakarta
-              </p>
-            </div>
-            <div>
-              <label className="text-sm">No. Telepon</label>
-              <p className="text-sm text-muted-foreground">
-                +62 812-3456-7890
-              </p>
-            </div>
-            <Button size="sm">Edit Profil</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Pengaturan Notifikasi</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">
-                Email Pesanan Baru
-              </span>
-              <Badge variant="secondary">Aktif</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">
-                SMS Alert Pembayaran
-              </span>
-              <Badge variant="secondary">Aktif</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Push Notifikasi</span>
-              <Badge>Aktif</Badge>
-            </div>
-            <Button size="sm">Kelola Notifikasi</Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
 
 function HelpPage() {
   return (
