@@ -13,6 +13,7 @@ import { SettingsPage } from "./components/settings-page";
 import { ResellerPage, initialResellers } from "./components/reseller-page";
 import { MarketingPage, initialVouchers } from "./components/marketing-page";
 import { HelpPage } from "./components/help-page";
+import { LiveChat } from "./components/live-chat";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
@@ -148,6 +149,7 @@ export default function App() {
           <div className="p-6">{renderContent()}</div>
         </main>
       </div>
+      <LiveChat />
     </div>
   );
 }
