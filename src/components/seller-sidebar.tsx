@@ -16,7 +16,8 @@ import {
   Menu,
   X,
   AlertTriangle,
-  Handshake
+  Handshake,
+  Megaphone,
 } from 'lucide-react'
 import { cn } from "./ui/utils"
 
@@ -26,6 +27,7 @@ interface SellerSidebarProps {
   productBadge?: number
   orderBadge?: number
   resellerBadge?: number
+  marketingBadge?: number
 }
 
 const baseNavigationItems = [
@@ -35,6 +37,7 @@ const baseNavigationItems = [
   { id: 'analytics', label: 'Analitik',  icon: BarChart3 },
   { id: 'customers',  label: 'Pelanggan', icon: Users },
   { id: 'resellers',  label: 'Reseller',  icon: Handshake },
+  { id: 'marketing',  label: 'Pemasaran', icon: Megaphone },
   { id: 'payments',   label: 'Keuangan',  icon: CreditCard },
 ]
 
@@ -57,7 +60,7 @@ const bottomItems = [
   },
 ]
 
-export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge, resellerBadge }: SellerSidebarProps) {
+export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge, resellerBadge, marketingBadge }: SellerSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const navigationItems = baseNavigationItems.map(item => ({
@@ -68,7 +71,9 @@ export function SellerSidebar({ activeTab, onTabChange, productBadge, orderBadge
         ? String(orderBadge)
         : item.id === 'resellers' && resellerBadge != null && resellerBadge > 0
           ? String(resellerBadge)
-          : undefined,
+          : item.id === 'marketing' && marketingBadge != null && marketingBadge > 0
+            ? String(marketingBadge)
+            : undefined,
   }))
 
   return (

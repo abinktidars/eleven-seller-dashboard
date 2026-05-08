@@ -11,6 +11,8 @@ import { RegisterPage } from "./components/register-page";
 import { ForgotPasswordPage } from "./components/forgot-password-page";
 import { SettingsPage } from "./components/settings-page";
 import { ResellerPage, initialResellers } from "./components/reseller-page";
+import { MarketingPage, initialVouchers } from "./components/marketing-page";
+import { HelpPage } from "./components/help-page";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
@@ -49,57 +51,6 @@ function NotificationsPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function HelpPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Pusat Bantuan</h1>
-        <p className="text-muted-foreground">Dapatkan bantuan dan panduan menggunakan Seller Center</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5" />
-              Frequently Asked Questions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              "Bagaimana cara menambah produk baru?",
-              "Cara mengatur metode pembayaran?",
-              "Bagaimana cara menarik saldo?",
-            ].map((q, i) => (
-              <div key={i} className="p-3 border rounded-lg">
-                <p className="text-sm">{q}</p>
-              </div>
-            ))}
-            <Button size="sm" variant="outline">Lihat Semua FAQ</Button>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Kontak Support</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[
-              { label: "Email Support", value: "seller-support@example.com" },
-              { label: "WhatsApp", value: "+62 811-2345-6789" },
-              { label: "Jam Operasional", value: "Senin - Jumat, 09:00 - 18:00" },
-            ].map((item, i) => (
-              <div key={i}>
-                <p className="text-sm font-medium">{item.label}</p>
-                <p className="text-sm text-muted-foreground">{item.value}</p>
-              </div>
-            ))}
-            <Button size="sm">Hubungi Support</Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
@@ -152,6 +103,7 @@ export default function App() {
       case "analytics":     return <AnalyticsDashboard />;
       case "customers":     return <CustomersPage />;
       case "resellers":     return <ResellerPage />;
+      case "marketing":     return <MarketingPage />;
       case "payments":      return <PaymentsPage />;
       case "notifications": return <NotificationsPage />;
       case "settings":      return <SettingsPage />;
@@ -163,6 +115,10 @@ export default function App() {
   const productBadge   = initialProducts.filter(p => p.stock <= 5).length
   const orderBadge     = initialOrders.filter(o => o.status === 'pending').length
   const resellerBadge  = initialResellers.filter(r => r.status === 'pending').length
+  const marketingBadge = initialVouchers.filter(v => {
+    const now = new Date()
+    return !v.disabled && new Date(v.endDate + 'T23:59:59') > now && new Date(v.startDate) <= now && v.used < v.quota
+  }).length
 
   return (
     <div className="flex h-screen bg-background">
@@ -172,6 +128,7 @@ export default function App() {
         productBadge={productBadge}
         orderBadge={orderBadge}
         resellerBadge={resellerBadge}
+        marketingBadge={marketingBadge}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="border-b bg-background px-6 py-3 flex items-center justify-between">
